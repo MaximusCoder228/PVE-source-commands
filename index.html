@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гайд по настройке ИТ-инфраструктуры</title>
+    <!-- Подключение файла стилей -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Гайд по настройке ИТ-инфраструктуры</h1>
+        <nav>
+            <!-- Простое навигационное меню -->
+            <a href="#glossary">Глоссарий</a>
+            <a href="#stage1">Подготовка</a>
+            <a href="#stage2">Коммутация</a>
+            <a href="#stage3">Маршрутизация</a>
+            <a href="#stage4">DNS</a>
+            <a href="#stage5">Центр сертификации</a>
+            <a href="#stage6">База данных</a>
+            <a href="#stage7">Хранилище</a>
+            <a href="#stage8">Active Directory</a>
+            <a href="#stage9">Мониторинг</a>
+            <a href="#stage10">VoIP</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Секция Вступление / Глоссарий -->
+        <section id="introduction">
+            <h2>Описание</h2>
+            <p>Этот сайт содержит подробные гайды по настройке различных компонентов типичной ИТ-инфраструктуры, включая маршрутизацию, коммутацию, DNS, Active Directory, системы хранения, мониторинг и VoIP.</p>
+            <p>Навигация по гайдам осуществляется через меню выше или через оглавление ниже.</p>
+        </section>
+
+        <section id="glossary">
+            <h2>Глоссарий терминов</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Термин</th>
+                        <th>Пояснение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>FQDN (Fully Qualified Domain Name)</td>
+                        <td>Полное имя хоста, включающее все части домена (например, rtr-cod.cod.ssa2026.region).</td>
+                    </tr>
+                    <tr>
+                        <td>RADIUS (Remote Authentication Dial-In User Service)</td>
+                        <td>Протокол для централизованной аутентификации, авторизации и учета.</td>
+                    </tr>
+                    <tr>
+                        <td>NTP (Network Time Protocol)</td>
+                        <td>Протокол для синхронизации времени между устройствами.</td>
+                    </tr>
+                    <tr>
+                        <td>VLAN (Virtual Local Area Network)</td>
+                        <td>Логическое разделение физической сети.</td>
+                    </tr>
+                    <tr>
+                        <td>Trunk / Access</td>
+                        <td>Типы портов коммутатора. Trunk передает трафик нескольких VLAN, Access — одной.</td>
+                    </tr>
+                    <tr>
+                        <td>Native VLAN</td>
+                        <td>VLAN, которая передается по trunk-порту без тега.</td>
+                    </tr>
+                    <tr>
+                        <td>Aggregation (bonding, LACP)</td>
+                        <td>Объединение нескольких физических каналов в один логический. active-backup — резервирование.</td>
+                    </tr>
+                    <tr>
+                        <td>STP (Spanning Tree Protocol)</td>
+                        <td>Протокол для предотвращения петель в сети.</td>
+                    </tr>
+                    <tr>
+                        <td>802.1w (RSTP)</td>
+                        <td>Улучшенная версия STP.</td>
+                    </tr>
+                    <tr>
+                        <td>BGP (Border Gateway Protocol)</td>
+                        <td>Протокол маршрутизации между автономными системами.</td>
+                    </tr>
+                    <tr>
+                        <td>OSPF (Open Shortest Path First)</td>
+                        <td>Протокол маршрутизации внутри AS.</td>
+                    </tr>
+                    <tr>
+                        <td>GRE (Generic Routing Encapsulation)</td>
+                        <td>Протокол туннелирования.</td>
+                    </tr>
+                    <tr>
+                        <td>DNS (Domain Name System)</td>
+                        <td>Система разрешения имен.</td>
+                    </tr>
+                    <tr>
+                        <td>A/AAAA/PTR Records</td>
+                        <td>Типы DNS-записей. A — имя -> IPv4, PTR — IPv4 -> имя.</td>
+                    </tr>
+                    <tr>
+                        <td>Forwarder (переадресатор)</td>
+                        <td>DNS-сервер, на который направляются запросы, которые не могут быть разрешены локально.</td>
+                    </tr>
+                    <tr>
+                        <td>Forwarding Rules</td>
+                        <td>Правила перенаправления запросов для конкретных зон на другие DNS-серверы.</td>
+                    </tr>
+                    <tr>
+                        <td>CA (Certificate Authority)</td>
+                        <td>Центр сертификации.</td>
+                    </tr>
+                    <tr>
+                        <td>PostgreSQL</td>
+                        <td>Система управления базами данных.</td>
+                    </tr>
+                    <tr>
+                        <td>iSCSI</td>
+                        <td>Протокол для подключения удаленных дисков.</td>
+                    </tr>
+                    <tr>
+                        <td>Target / Initiator</td>
+                        <td>Устройство, предоставляющее iSCSI-диск (Target) и устройство, подключающееся к нему (Initiator).</td>
+                    </tr>
+                    <tr>
+                        <td>LVM (Logical Volume Manager)</td>
+                        <td>Управление дисками через логические тома.</td>
+                    </tr>
+                    <tr>
+                        <td>PV / VG / LV</td>
+                        <td>Physical Volume, Volume Group, Logical Volume в LVM.</td>
+                    </tr>
+                    <tr>
+                        <td>NFS (Network File System)</td>
+                        <td>Протокол сетевого доступа к файлам.</td>
+                    </tr>
+                    <tr>
+                        <td>Export</td>
+                        <td>Директория, доступная через NFS.</td>
+                    </tr>
+                    <tr>
+                        <td>AD (Active Directory)</td>
+                        <td>Служба каталогов Microsoft (реализована в Samba AD).</td>
+                    </tr>
+                    <tr>
+                        <td>DC (Domain Controller)</td>
+                        <td>Контроллер домена.</td>
+                    </tr>
+                    <tr>
+                        <td>Samba AD</td>
+                        <td>Реализация Active Directory на базе Samba для Linux.</td>
+                    </tr>
+                    <tr>
+                        <td>BIND9_DLZ</td>
+                        <td>Встроенный DNS-движок в Samba AD.</td>
+                    </tr>
+                    <tr>
+                        <td>OU (Organizational Unit)</td>
+                        <td>Подразделение в AD.</td>
+                    </tr>
+                    <tr>
+                        <td>GPO (Group Policy Object)</td>
+                        <td>Объект групповой политики.</td>
+                    </tr>
+                    <tr>
+                        <td>Zabbix</td>
+                        <td>Система мониторинга.</td>
+                    </tr>
+                    <tr>
+                        <td>VoIP (Voice over IP)</td>
+                        <td>Технология передачи голоса по IP-сети.</td>
+                    </tr>
+                    <tr>
+                        <td>SIP (Session Initiation Protocol)</td>
+                        <td>Протокол для установки VoIP-сессий.</td>
+                    </tr>
+                    <tr>
+                        <td>SNG7-PBX</td>
+                        <td>Конкретная система IP-телефонии.</td>
+                    </tr>
+                    <tr>
+                        <td>SoftPhone</td>
+                        <td>Программа для совершения звонков с ПК.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 1 -->
+        <section id="stage1">
+            <h2>Этап 1: Подготовительный</h2>
+            <p>Базовые настройки, необходимые для дальнейшей работы.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Настройка FQDN</td>
+                        <td><code>sudo hostnamectl set-hostname &lt;имя&gt;.cod.ssa2026.region</code></td>
+                        <td>Изменение FQDN для устройств в ЦОД.</td>
+                        <td>rtr-cod, sw1-cod, sw2-cod, cli-cod, srv1-cod, srv2-cod, sip-cod, admin-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка FQDN для офиса a</td>
+                        <td><code>sudo hostnamectl set-hostname &lt;имя&gt;.office.ssa2026.region</code></td>
+                        <td>Изменение FQDN для устройств в офисе a.</td>
+                        <td>rtr-a, sw1-a, sw2-a, dc-a, cli1-a, cli2-a</td>
+                    </tr>
+                    <tr>
+                        <td>Установка RADIUS-клиента</td>
+                        <td><code>opkg update && opkg install radcli</code></td>
+                        <td>Установка клиента RADIUS на rtr-cod.</td>
+                        <td>rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка RADIUS-сервера</td>
+                        <td>(Установка и настройка FreeRADIUS на srv1-cod)</td>
+                        <td>На srv1-cod должен быть установлен и настроен RADIUS-сервер.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка RADIUS-клиента на rtr-cod (CLI)</td>
+                        <td>В CLI: <code>radius-server host srv1-cod key P@ssw0rd</code>, <code>aaa new-model</code>, <code>aaa authentication login default group radius local</code></td>
+                        <td>Указание сервера, ключа и метода аутентификации. local — резерв.</td>
+                        <td>rtr-cod (через CLI)</td>
+                    </tr>
+                    <tr>
+                        <td>Проверка отсутствия локального netuser</td>
+                        <td>Убедиться, что netuser не существует в /etc/passwd на rtr-cod.</td>
+                        <td>Имя netuser не должно быть локальным.</td>
+                        <td>rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка привилегий для netuser на srv1-cod</td>
+                        <td>(В конфигурации FreeRADIUS)</td>
+                        <td>Пользователь должен иметь права конфигурировать маршрутизатор.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка NTP</td>
+                        <td><code>sudo timedatectl set-ntp true</code> или настройка chrony</td>
+                        <td>Синхронизация времени с 100.100.100.100.</td>
+                        <td>Все устройства</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка часового пояса</td>
+                        <td><code>sudo timedatectl set-timezone Europe/Moscow</code></td>
+                        <td>Установка московского часового пояса.</td>
+                        <td>Все устройства</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 2 -->
+        <section id="stage2">
+            <h2>Этап 2: Коммутация</h2>
+            <p>Настройка VLAN, агрегации каналов и STP.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Создать VLAN на sw1-cod, sw2-cod</td>
+                        <td><code>sudo ip link add link eth0 name eth0.100 type vlan id 100</code></td>
+                        <td>Создаем подинтерфейс для VLAN 100.</td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Повторить для VLAN 200, 300, 400, 500</td>
+                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code> и т.д.</td>
+                        <td></td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить Bridge и добавить VLAN</td>
+                        <td><code>sudo brctl addbr br-vlan100</code>, <code>sudo brctl addif br-vlan100 eth0.100</code></td>
+                        <td>Создаем бридж для VLAN 100 и добавляем туда подинтерфейс.</td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить порты как Access или Trunk (L2 диаграмма)</td>
+                        <td>Для Access: добавить физический порт в нужный бридж. Для Trunk: использовать bridge vlan add vid X tagged dev ethY.</td>
+                        <td>Следуем схеме L2 и таблице VLAN.</td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить IP-адреса управления (VLAN MGMT-COD)</td>
+                        <td><code>sudo ip addr add 10.0.3.10/24 dev br-mgmt</code> (пример для sw1-cod).</td>
+                        <td>IP для управления в VLAN 300.</td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Запретить маршрутизацию VLAN-DATA</td>
+                        <td>Убедиться, что бридж для VLAN 200 (br-data) не имеет назначенного IP или маршрутизатора.</td>
+                        <td>Трафик VLAN-DATA не должен покидать коммутатор.</td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать агрегацию (bonding) между sw1-cod и sw2-cod</td>
+                        <td><code>sudo modprobe bonding mode=active-backup miimon=100</code>, <code>sudo ip link add bond0 type bond mode active-backup miimon 100</code>, <code>sudo ip link set eth3 master bond0</code>, <code>sudo ip link set eth4 master bond0</code>, <code>sudo brctl addif br-mgmt bond0</code>.</td>
+                        <td>Объединение физических портов в логический канал с резервированием.</td>
+                        <td>sw1-cod, sw2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Включить STP на sw1-a, sw2-a</td>
+                        <td><code>sudo brctl stp br-data on</code></td>
+                        <td>Включаем протокол STP на мосте br-data.</td>
+                        <td>sw1-a, sw2-a</td>
+                    </tr>
+                    <tr>
+                        <td>Установить приоритет STP</td>
+                        <td><code>sudo brctl setbridgeprio br-data 8192</code> (на sw1-a).</td>
+                        <td>Меньшее значение делает sw1-a корневым мостом.</td>
+                        <td>sw1-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить 802.1w (RSTP)</td>
+                        <td>(Обычно это поведение по умолчанию)</td>
+                        <td>Использовать RSTP.</td>
+                        <td>sw1-a, sw2-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить порты как Access или Trunk для офиса a</td>
+                        <td>Следуя схеме L2 и таблице VLAN.</td>
+                        <td></td>
+                        <td>sw1-a, sw2-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить IP-адреса управления (VLAN MGMT-A)</td>
+                        <td><code>sudo ip addr add 10.0.3.110/24 dev br-mgmt</code> (пример для sw1-a).</td>
+                        <td>IP для управления в VLAN 300.</td>
+                        <td>sw1-a, sw2-a</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 3 -->
+        <section id="stage3">
+            <h2>Этап 3: Маршрутизация</h2>
+            <p>Настройка BGP, OSPF, GRE.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить FRRouting</td>
+                        <td><code>opkg update && opkg install frr frr-bgp frr-ospf</code></td>
+                        <td>Установка FRRouting на rtr-cod.</td>
+                        <td>rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить BGP с GIGAFON COD</td>
+                        <td>В /etc/frr/bgpd.conf: <code>router bgp 64500</code>, <code>neighbor 178.207.179.1 remote-as 31133</code>, ...</td>
+                        <td>Настройка BGP-сессии с AS 31133.</td>
+                        <td>rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Запретить анонс внутренних сетей (фильтр)</td>
+                        <td>В /etc/frr/bgpd.conf: ip prefix-list, route-map...</td>
+                        <td>Блокировка анонсов внутренних сетей в интернет.</td>
+                        <td>rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить OSPF между rtr-cod, rtr-a, fw-cod</td>
+                        <td>В /etc/frr/ospfd.conf: <code>router ospf</code>, network...</td>
+                        <td>Настройка OSPF в области 0.</td>
+                        <td>rtr-cod, rtr-a, fw-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить аутентификацию OSPF (MD5)</td>
+                        <td>В /etc/frr/ospfd.conf: area 0 authentication...</td>
+                        <td>Использование MD5 для защиты OSPF-пакетов.</td>
+                        <td>rtr-cod, rtr-a, fw-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Перевести интерфейсы в пассивный режим (кроме туннельных)</td>
+                        <td>В /etc/frr/ospfd.conf: <code>passive-interface ethY</code>.</td>
+                        <td>Предотвращение отправки Hello-пакетов на указанные интерфейсы.</td>
+                        <td>rtr-cod, rtr-a, fw-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать GRE-туннель между rtr-a и rtr-cod</td>
+                        <td><code>sudo ip tunnel add gre1 mode gre remote ... local ... ttl 255</code>, ...</td>
+                        <td>Создание виртуального канала.</td>
+                        <td>rtr-a, rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Добавить маршрут через туннель</td>
+                        <td><code>sudo ip route add 10.0.2.0/24 via ... dev gre1</code></td>
+                        <td>Маршрут к сети офиса a.</td>
+                        <td>rtr-a, rtr-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настройка доступа в Интернет</td>
+                        <td>Убедиться, что маршрут по умолчанию получен через BGP.</td>
+                        <td></td>
+                        <td>rtr-cod</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 4 -->
+        <section id="stage4">
+            <h2>Этап 4: DNS</h2>
+            <p>Настройка службы доменных имен.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить DNS-сервер (BIND9)</td>
+                        <td><code>sudo apt update && sudo apt install bind9</code></td>
+                        <td>Устанавливаем BIND9.</td>
+                        <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Создать файл зоны и наполнить A/PTR записями</td>
+                        <td>(Создание db.cod.ssa2026.region, db.office.ssa2026.region и обратных)</td>
+                        <td>Определение записей A и PTR.</td>
+                        <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить named.conf.local</td>
+                        <td><code>sudo nano /etc/bind/named.conf.local</code></td>
+                        <td>Добавление зон.</td>
+                        <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить переадресацию (forwarder)</td>
+                        <td>В named.conf.options: <code>forwarders { 100.100.100.100; };</code></td>
+                        <td>Переадресация неизвестных запросов.</td>
+                        <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить перенаправление между DNS-серверами (forwarding rules)</td>
+                        <td>В named.conf.options: zone "office.ssa2026.region" type forward...</td>
+                        <td>Перенаправление между srv1-cod и dc-a.</td>
+                        <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Перезапустить BIND</td>
+                        <td><code>sudo systemctl restart bind9</code></td>
+                        <td>Применение изменений.</td>
+                        <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить DNS-сервера в resolv.conf</td>
+                        <td><code>sudo nano /etc/resolv.conf</code> и добавить nameserver</td>
+                        <td>Указание основного DNS-сервера для устройств.</td>
+                        <td>Все устройства</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 5 -->
+        <section id="stage5">
+            <h2>Этап 5: Центр сертификации</h2>
+            <p>Настройка CA.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить OpenSSL</td>
+                        <td><code>sudo apt install openssl</code></td>
+                        <td>Устанавливаем OpenSSL.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать директорию для CA</td>
+                        <td><code>sudo mkdir -p /var/ca/{certs,crl,newcerts,private}</code></td>
+                        <td>Создаем структуру директорий.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать конфигурационный файл CA</td>
+                        <td><code>sudo nano /var/ca/ca.conf</code></td>
+                        <td>Конфигурация для openssl.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Сгенерировать приватный ключ и корневой сертификат</td>
+                        <td><code>sudo openssl genrsa...</code>, <code>sudo openssl req -new -x509...</code></td>
+                        <td>Создание ключа и самоподписанного сертификата.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Установить сертификат CA на рабочие станции</td>
+                        <td><code>sudo cp cacert.pem /usr/local/share/ca-certificates/...</code>, <code>sudo update-ca-certificates</code></td>
+                        <td>Добавляем корневой сертификат в доверенные.</td>
+                        <td>cli-cod, cli1-a, cli2-a, admin-cod</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 6 -->
+        <section id="stage6">
+            <h2>Этап 6: База данных</h2>
+            <p>Настройка PostgreSQL.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить PostgreSQL (версия >= 17)</td>
+                        <td><code>sudo apt install postgresql-17</code></td>
+                        <td>Устанавливаем PostgreSQL.</td>
+                        <td>srv2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Запустить и включить службу PostgreSQL</td>
+                        <td><code>sudo systemctl start postgresql</code>, <code>sudo systemctl enable postgresql</code></td>
+                        <td>Запуск и автозапуск.</td>
+                        <td>srv2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать суперпользователя superadmin</td>
+                        <td><code>sudo -u postgres psql -c "CREATE USER superadmin..."</code></td>
+                        <td>Создаем нового суперпользователя.</td>
+                        <td>srv2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Установить DBeaver на admin-cod</td>
+                        <td><code>sudo apt install dbeaver-ce</code> или скачать</td>
+                        <td>Устанавливаем клиент для администрирования.</td>
+                        <td>admin-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить DBeaver (на admin-cod)</td>
+                        <td>(Создание подключения)</td>
+                        <td>Подключаемся к базе данных.</td>
+                        <td>admin-cod</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 7 -->
+        <section id="stage7">
+            <h2>Этап 7: Хранилище</h2>
+            <p>Настройка iSCSI, LVM, NFS.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Настроить VLAN DATA на srv2-cod</td>
+                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code> и т.д.</td>
+                        <td>Поднимаем интерфейс VLAN DATA.</td>
+                        <td>srv2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Установить iSCSI Target</td>
+                        <td><code>sudo apt install targetcli-fb</code></td>
+                        <td>Устанавливаем утилиту для настройки iSCSI Target.</td>
+                        <td>srv2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать iSCSI Target</td>
+                        <td><code>sudo targetcli /backstores/block create...</code></td>
+                        <td>Создаем target, привязываем диск, настраиваем ACL.</td>
+                        <td>srv2-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить VLAN DATA на srv1-cod</td>
+                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code> и т.д.</td>
+                        <td>Поднимаем интерфейс VLAN DATA.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Установить iSCSI Initiator</td>
+                        <td><code>sudo apt install open-iscsi</code></td>
+                        <td>Устанавливаем клиента iSCSI.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Подключиться к Target</td>
+                        <td><code>sudo iscsiadm -m discovery...</code>, <code>sudo iscsiadm -m node...</code></td>
+                        <td>Открываем сессию с target.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить LVM на iSCSI диске</td>
+                        <td><code>sudo pvcreate /dev/sda</code>, <code>sudo vgcreate VG /dev/sda</code> и т.д.</td>
+                        <td>Создаем физический том, группу томов, логический том.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Создать файловую систему XFS</td>
+                        <td><code>sudo mkfs.xfs /dev/VG/DATA</code></td>
+                        <td>Форматируем LV под XFS.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить монтирование в /etc/fstab</td>
+                        <td><code>sudo nano /etc/fstab</code> и добавить запись</td>
+                        <td>Автоматическое монтирование при загрузке.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Установить NFS-сервер</td>
+                        <td><code>sudo apt install nfs-kernel-server</code></td>
+                        <td>Устанавливаем NFS-сервер.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить экспорт /opt/data</td>
+                        <td><code>sudo nano /etc/exports</code> и добавить запись</td>
+                        <td>Открываем доступ к /opt/data.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Экспортировать директорию</td>
+                        <td><code>sudo exportfs -ra</code>, <code>sudo systemctl restart nfs-server</code></td>
+                        <td>Применяем изменения.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить автомонтирование NFS на admin-cod</td>
+                        <td><code>sudo nano /etc/fstab</code> и добавить запись</td>
+                        <td>Автомонтирование.</td>
+                        <td>admin-cod</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 8 -->
+        <section id="stage8">
+            <h2>Этап 8: Active Directory</h2>
+            <p>Настройка Samba AD.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить Samba AD</td>
+                        <td><code>sudo apt install samba samba-common-bin</code></td>
+                        <td>Устанавливаем Samba.</td>
+                        <td>dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Произвести подготовку для Samba AD</td>
+                        <td><code>sudo samba-tool domain provision --realm=office.ssa2026.region...</code></td>
+                        <td>Создаем домен.</td>
+                        <td>dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Запустить и включить Samba AD</td>
+                        <td><code>sudo systemctl disable smbd nmbd</code>, <code>sudo systemctl enable samba-ad-dc</code> и т.д.</td>
+                        <td>Останавливаем старые службы, включаем новую.</td>
+                        <td>dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>Создать подразделения (OU)</td>
+                        <td><code>samba-tool ou create "OU=ofadmins,DC=office,DC=ssa2026,DC=region"</code> и т.д.</td>
+                        <td>Создаем Organizational Units.</td>
+                        <td>dc-a (или через admc)</td>
+                    </tr>
+                    <tr>
+                        <td>Создать группы</td>
+                        <td><code>samba-tool group add ofadmins --description="Office Admins"</code> и т.д.</td>
+                        <td>Создаем группы.</td>
+                        <td>dc-a (или через admc)</td>
+                    </tr>
+                    <tr>
+                        <td>Создать пользователей</td>
+                        <td><code>samba-tool user create ofadmin1 P@ssw0rd --given-name=OfAdmin...</code> и т.д.</td>
+                        <td>Создаем пользователей.</td>
+                        <td>dc-a (или через admc)</td>
+                    </tr>
+                    <tr>
+                        <td>Добавить пользователей в OU и группы</td>
+                        <td><code>samba-tool user move...</code>, <code>samba-tool group addmembers...</code></td>
+                        <td>Помещаем пользователей в OU и добавляем в группы.</td>
+                        <td>dc-a (или через admc)</td>
+                    </tr>
+                    <tr>
+                        <td>Настроить политику GPO</td>
+                        <td>(Через admc на cli1-a)</td>
+                        <td>Требуется GUI-инструмент admc.</td>
+                        <td>cli1-a (через admc -> dc-a)</td>
+                    </tr>
+                    <tr>
+                        <td>Присоединить cli1-a и cli2-a к домену</td>
+                        <td><code>sudo realm join OFFICE.SSA2026.REGION -U administrator</code></td>
+                        <td>Присоединение к домену.</td>
+                        <td>cli1-a, cli2-a</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция Этап 9 -->
+        <section id="stage9">
+            <h2>Этап 9: Мониторинг</h2>
+            <p>Настройка Zabbix.</p>
+            <p>(Секция будет заполнена аналогично предыдущим этапам, когда вы выполните настройку Zabbix)</p>
+            <!-- Пример строки таблицы -->
+            <!--
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить Zabbix</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                </tbody>
+            </table>
+            -->
+        </section>
+
+        <!-- Секция Этап 10 -->
+        <section id="stage10">
+            <h2>Этап 10: VoIP</h2>
+            <p>Настройка SNG7-PBX.</p>
+            <p>(Секция будет заполнена аналогично предыдущим этапам, когда вы выполните настройку VoIP)</p>
+            <!-- Пример строки таблицы -->
+            <!--
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <td>Пояснение</td>
+                        <td>Где выполнять</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Установить SNG7-PBX</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                    </tr>
+                </tbody>
+            </table>
+            -->
+        </section>
+
+    </main>
+
+    <footer>
+        <h3>Полезные ссылки</h3>
+        <ul>
+            <li><a href="https://www.kernel.org/doc/Documentation/networking/bonding.txt" target="_blank">Linux Bonding Driver Documentation</a></li>
+            <li><a href="https://lartc.org/howto/" target="_blank">Linux Advanced Routing & Traffic Control HOWTO</a></li>
+            <li><a href="https://docs.frrouting.org/en/latest/" target="_blank">FRRouting Documentation</a></li>
+            <li><a href="https://wiki.samba.org/index.php/Samba_AD_DC_HOWTO_(Russian)" target="_blank">Samba AD DC HOWTO (Russian)</a></li>
+            <li><a href="https://kb.ispsystem.ru/articles/dns/konfiguracija-sistemy-bind9" target="_blank">BIND9 Documentation (RU)</a></li>
+            <li><a href="https://postgrespro.ru/docs/postgresql/17" target="_blank">PostgreSQL Documentation (RU)</a></li>
+            <li><a href="https://help.ubuntu.ru/wiki/nfs" target="_blank">NFS Server Setup (RU)</a></li>
+            <li><a href="https://jamielinux.com/docs/openssl-certificate-authority/" target="_blank">OpenSSL Certificate Authority</a></li>
+            <li><a href="https://zabbix.com/documentation/current/manual/installation" target="_blank">Zabbix Installation Manual</a></li>
+        </ul>
+    </footer>
+
+</body>
+</html>
