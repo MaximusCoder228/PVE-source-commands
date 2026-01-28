@@ -1,161 +1,156 @@
-/* style.css */
+:root {
+  --bg: #fff;
+  --text: #24292e;
+  --link: #0969da;
+  --code-bg: #f6f8fa;
+  --border: #d0d7de;
+  --card-bg: #fafbfc;
+}
 
-/* Общие стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #ffffff; /* Светлый фон */
-    color: #2F3337; /* Темный текст */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-/* Шапка */
 header {
-    background-color: #2F3337; /* Темный фон шапки */
-    color: white;
-    padding: 1rem 2rem;
-    position: sticky; /* Прикрепляем шапку к верху */
-    top: 0;
-    z-index: 100;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
 }
 
-header h1 {
-    margin: 0;
-    font-size: 1.8em;
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 
-/* Навигационное меню */
-nav {
-    margin-top: 0.5rem;
+.subtitle {
+  color: #57606a;
+  font-size: 1.1rem;
 }
 
-nav a {
-    color: #e1e4e8; /* Светло-серый цвет ссылок */
-    text-decoration: none;
-    margin-right: 1rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+.toc {
+  background: var(--card-bg);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
 }
 
-nav a:hover {
-    background-color: #586069; /* При наведении */
-    color: white;
+.toc h2 {
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
 }
 
-/* Основной контент */
-main {
-    max-width: 1200px; /* Максимальная ширина */
-    margin: auto; /* Центрирование */
-    padding: 2rem;
+.toc ul {
+  list-style: none;
+  columns: 2;
+  column-gap: 2rem;
 }
 
-/* Секции */
+.toc li {
+  margin-bottom: 0.4rem;
+}
+
+.toc a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+}
+
 section {
-    margin-bottom: 3rem; /* Отступ между секциями */
+  margin-bottom: 2.5rem;
 }
 
-section h2 {
-    border-bottom: 1px solid #e1e4e8; /* Линия под заголовком */
-    padding-bottom: 0.3rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    color: #0366d6; /* Цвет заголовка, как у ссылок */
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
 }
 
-/* Таблицы */
-table {
-    width: 100%;
-    border-collapse: collapse; /* Склеиваем границы */
-    margin-bottom: 1.5rem;
-    display: block; /* Позволяет горизонтальной прокрутке */
-    overflow-x: auto; /* Горизонтальная прокрутка, если таблица шире */
-    white-space: nowrap; /* Предотвращает перенос слов внутри ячеек */
+h3 {
+  font-size: 1.3rem;
+  margin: 1.2rem 0 0.6rem;
 }
 
-th, td {
-    border: 1px solid #dfe2e5; /* Границы ячеек */
-    padding: 0.6rem 0.8rem;
-    text-align: left; /* Выравнивание текста по левому краю */
+p, ul, ol {
+  margin-bottom: 1rem;
 }
 
-th {
-    background-color: #f6f8fa; /* Светлый фон заголовков */
-    font-weight: bold;
-}
-
-/* Зебра (чередование цветов строк) */
-tbody tr:nth-of-type(odd) {
-    background-color: #fafbfc;
-}
-
-tbody tr:hover {
-    background-color: #f6f8fa; /* Подсветка при наведении */
-}
-
-/* Блоки кода */
-pre {
-    background-color: #f6f6f6; /* Светло-серый фон */
-    border: 1px solid #dfe2e5;
-    border-radius: 3px;
-    padding: 1rem;
-    overflow: auto; /* Горизонтальная прокрутка для кода */
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* Моноширинный шрифт */
-    font-size: 0.9em;
+ul, ol {
+  padding-left: 1.5rem;
 }
 
 code {
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    background-color: #f6f6f6; /* Фон для inline кода */
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.95em;
 }
 
-/* Подвал */
+pre {
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+}
+
+.note {
+  background: #fff8e1;
+  border-left: 4px solid #f5a623;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.warning {
+  background: #ffebee;
+  border-left: 4px solid #f44336;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
 footer {
-    background-color: #f6f8fa; /* Светлый фон подвала */
-    padding: 2rem;
-    margin-top: 3rem;
-    border-top: 1px solid #e1e4e8; /* Линия сверху */
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: #57606a;
+  font-size: 0.95rem;
 }
 
-footer h3 {
-    color: #0366d6;
-    margin-bottom: 1rem;
+a {
+  color: var(--link);
+  text-decoration: none;
 }
 
-footer ul {
-    list-style-type: none; /* Убираем маркеры списка */
-    padding-left: 0;
+a:hover {
+  text-decoration: underline;
 }
 
-footer li {
-    margin-bottom: 0.5rem;
-}
-
-footer a {
-    color: #0366d6; /* Цвет ссылок в подвале */
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Адаптивность */
 @media (max-width: 768px) {
-    header {
-        padding: 1rem;
-    }
-
-    main {
-        padding: 1rem;
-    }
-
-    nav a {
-        display: inline-block; /* Делаем ссылки блочными на мобильных */
-        margin-bottom: 0.2rem;
-    }
+  body {
+    padding: 1rem;
+  }
+  .toc ul {
+    columns: 1;
+  }
 }
