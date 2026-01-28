@@ -3,21 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Гайд: Подготовка Cloud-ADM</title>
+  <title>Cloud-ADM: Подготовка управляющей машины</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
 </head>
 <body>
 
-<header class="hero">
-  <div class="container">
-    <h1>Подготовка управляющей машины Cloud-ADM</h1>
-    <p class="lead">Пошаговый гайд для начинающих: от создания ВМ до готового рабочего стола с SSH и RDP</p>
+<header class="site-header">
+  <div class="container flex-row">
+    <div class="logo">
+      <span class="logo-icon">⚙️</span>
+      <span class="logo-text">TechGuides</span>
+    </div>
+    <nav class="top-nav">
+      <a href="#overview">Начало</a>
+      <a href="#step1">Создание ВМ</a>
+      <a href="#step2">SSH</a>
+      <a href="#step3">RDP</a>
+      <a href="#resources">Ссылки</a>
+    </nav>
   </div>
 </header>
 
-<div class="container">
-  <aside class="toc-card">
-    <h2>Содержание</h2>
+<div class="page-wrapper">
+  <aside class="sidebar">
+    <h3>Содержание</h3>
     <ul>
       <li><a href="#overview">Что нужно сделать?</a></li>
       <li><a href="#step1">1. Создание ВМ в облаке</a></li>
@@ -29,79 +39,76 @@
     </ul>
   </aside>
 
-  <main>
+  <main class="content">
 
-    <section id="overview">
-      <h2>Что нужно сделать?</h2>
-      <p>Вам предстоит подготовить виртуальную машину с графическим интерфейсом и полным доступом по SSH/RDP. Эта машина будет использоваться как центр управления для развёртывания других сервисов.</p>
-      <div class="requirements-box">
-        <strong>Требования к ВМ:</strong>
+    <section id="overview" class="guide-section">
+      <h1>Подготовка управляющей машины Cloud-ADM</h1>
+      <p class="lead">Пошаговый гайд для начинающих: от создания ВМ до готового рабочего стола с SSH и RDP.</p>
+      
+      <div class="card card-info">
+        <h2>Требования к ВМ</h2>
         <ul>
-          <li>Имя: <code>Cloud-ADM</code></li>
-          <li>vCPU: 2, RAM: 4 ГБ, Диск: 30 ГБ</li>
-          <li>ОС: <code>alt-workstation-10.4-p10-cloud</code></li>
-          <li>Должен быть назначен <strong>плавающий IP</strong> (внешний адрес)</li>
+          <li><strong>Имя:</strong> <code>Cloud-ADM</code></li>
+          <li><strong>Ресурсы:</strong> 2 vCPU, 4 ГБ RAM, 30 ГБ диск</li>
+          <li><strong>ОС:</strong> <code>alt-workstation-10.4-p10-cloud</code></li>
+          <li><strong>Сеть:</strong> подключение к нужной сети + плавающий IP</li>
         </ul>
       </div>
     </section>
 
-    <section id="step1">
+    <section id="step1" class="guide-section">
       <h2>1. Создание ВМ в облаке</h2>
       <ol>
         <li>Зайдите в веб-интерфейс вашего облачного провайдера (например, OpenStack).</li>
-        <li>Нажмите «Создать инстанс» или «Launch Instance».</li>
+        <li>Нажмите «Создать инстанс».</li>
         <li>Укажите параметры:
           <ul>
-            <li><strong>Имя</strong>: <code>Cloud-ADM</code></li>
-            <li><strong>Образ</strong>: выберите <code>alt-workstation-10.4-p10-cloud</code></li>
-            <li><strong>Тип (Flavor)</strong>: 2 vCPU, 4 ГБ RAM (часто называется <code>m2.medium</code>)</li>
-            <li><strong>Сеть</strong>: подключите к сети, к которой можно привязать внешний IP (обычно это <code>net-cod</code> или аналог)</li>
+            <li><strong>Имя:</strong> <code>Cloud-ADM</code></li>
+            <li><strong>Образ:</strong> <code>alt-workstation-10.4-p10-cloud</code></li>
+            <li><strong>Тип:</strong> 2 vCPU, 4 ГБ RAM (обычно <code>m2.medium</code>)</li>
+            <li><strong>Сеть:</strong> выберите сеть, к которой можно привязать внешний IP</li>
           </ul>
         </li>
         <li>Создайте новый SSH-ключ:
           <ul>
-            <li>Имя ключа: <code>cloud-adm-key</code></li>
-            <li>Скачайте файл <code>cloud-adm-key.pem</code> и сохраните его на <strong>рабочий стол</strong></li>
+            <li><strong>Имя ключа:</strong> <code>cloud-adm-key</code></li>
+            <li><strong>Скачайте файл:</strong> <code>cloud-adm-key.pem</code> → сохраните на <strong>рабочий стол</strong></li>
           </ul>
         </li>
         <li>Завершите создание ВМ.</li>
         <li>После запуска привяжите к ней <strong>плавающий IP</strong> (Floating IP).</li>
       </ol>
-      <div class="tip">
+      <div class="callout callout-tip">
         💡 Запишите этот IP — он понадобится для подключения извне!
       </div>
     </section>
 
-    <section id="step2">
+    <section id="step2" class="guide-section">
       <h2>2. Настройка SSH через PuTTY</h2>
-      <p>ALT Linux не использует пароль по умолчанию — только SSH-ключ. Но PuTTY не принимает <code>.pem</code> напрямую, поэтому нужна конвертация.</p>
+      <p>ALT Linux не использует пароль по умолчанию — только SSH-ключ. Но PuTTY не принимает <code>.pem</code> напрямую.</p>
 
       <h3>Конвертация ключа</h3>
       <ol>
         <li>Скачайте <a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html" target="_blank">PuTTYgen</a>.</li>
-        <li>Откройте его → нажмите «Load» → выберите <code>cloud-adm-key.pem</code> (внизу выберите «All files»).</li>
+        <li>Откройте его → «Load» → выберите <code>cloud-adm-key.pem</code> (выберите «All files»).</li>
         <li>Нажмите «Save private key» → сохраните как <code>Cloud-ADM.ppk</code> на <strong>рабочий стол</strong>.</li>
       </ol>
 
       <h3>Настройка профиля в PuTTY</h3>
       <ol>
         <li>Откройте PuTTY.</li>
-        <li>В поле <strong>Host Name (or IP address)</strong> введите:<br><code>altlinux@ВАШ_ПЛАВАЮЩИЙ_IP</code></li>
-        <li>Слева выберите: <strong>Connection → SSH → Auth</strong></li>
-        <li>Нажмите «Browse» и выберите файл <code>Cloud-ADM.ppk</code></li>
-        <li>Слева выберите: <strong>Session</strong></li>
-        <li>В поле «Saved Sessions» введите: <code>Cloud-ADM</code></li>
-        <li>Нажмите «Save»</li>
+        <li>В поле <strong>Host Name</strong> введите: <code>altlinux@ВАШ_ПЛАВАЮЩИЙ_IP</code></li>
+        <li>Слева: <strong>Connection → SSH → Auth</strong> → «Browse» → выберите <code>Cloud-ADM.ppk</code></li>
+        <li>Слева: <strong>Session</strong> → введите имя: <code>Cloud-ADM</code> → нажмите «Save»</li>
       </ol>
-      <p>Теперь вы можете подключаться двойным кликом по профилю <code>Cloud-ADM</code>!</p>
+      <p>Теперь вы можете подключаться двойным кликом по профилю!</p>
     </section>
 
-    <section id="step3">
+    <section id="step3" class="guide-section">
       <h2>3. Настройка RDP-доступа</h2>
-      <p>RDP позволяет получить графический интерфейс ALT Workstation — как полноценный удалённый рабочий стол.</p>
+      <p>RDP даёт полноценный графический интерфейс ALT Workstation.</p>
 
-      <h3>Что делать на самой ВМ (через PuTTY):</h3>
-      <p>Подключитесь через PuTTY и выполните следующие команды <strong>по одной</strong>:</p>
+      <h3>Настройка на самой ВМ (через PuTTY):</h3>
       <pre><code>sudo apt-get update
 sudo apt-get install -y xrdp
 echo "altlinux:P@ssw0rd" | sudo chpasswd
@@ -109,76 +116,69 @@ sudo systemctl enable --now xrdp</code></pre>
 
       <h3>Создание файла подключения на вашем ПК:</h3>
       <ol>
-        <li>Откройте Блокнот (Notepad).</li>
-        <li>Вставьте следующий текст (замените IP на ваш):</li>
+        <li>Откройте Блокнот.</li>
+        <li>Вставьте (замените IP):</li>
       </ol>
       <pre><code>full address:s:ВАШ_ПЛАВАЮЩИЙ_IP
 username:s:altlinux
 prompt for credentials:i:0</code></pre>
       <ol start="3">
-        <li>Сохраните файл как <code>Cloud-ADM.rdp</code> на <strong>рабочий стол</strong>.</li>
+        <li>Сохраните как <code>Cloud-ADM.rdp</code> на <strong>рабочий стол</strong>.</li>
       </ol>
-      <p>Теперь двойной клик по этому файлу откроет удалённый рабочий стол. Логин: <code>altlinux</code>, пароль: <code>P@ssw0rd</code>.</p>
+      <p>Двойной клик → логин: <code>altlinux</code>, пароль: <code>P@ssw0rd</code>.</p>
     </section>
 
-    <section id="step4">
+    <section id="step4" class="guide-section">
       <h2>4. Финальная проверка</h2>
-      <p>Убедитесь, что у вас на рабочем столе есть три файла:</p>
+      <p>Убедитесь, что на рабочем столе есть три файла:</p>
       <ul>
-        <li><code>cloud-adm-key.pem</code> — оригинальный SSH-ключ</li>
-        <li><code>Cloud-ADM.ppk</code> — ключ для PuTTY</li>
-        <li><code>Cloud-ADM.rdp</code> — профиль для удалённого рабочего стола</li>
+        <li><code>cloud-adm-key.pem</code> — оригинальный ключ</li>
+        <li><code>Cloud-ADM.ppk</code> — для PuTTY</li>
+        <li><code>Cloud-ADM.rdp</code> — для удалённого рабочего стола</li>
       </ul>
       <p>Проверьте подключение:</p>
       <ul>
-        <li><strong>SSH</strong>: откройте PuTTY → выберите <code>Cloud-ADM</code> → должно подключиться <em>без запроса пароля</em>.</li>
-        <li><strong>RDP</strong>: дважды кликните по <code>Cloud-ADM.rdp</code> → введите пароль <code>P@ssw0rd</code>.</li>
+        <li><strong>SSH:</strong> PuTTY → профиль <code>Cloud-ADM</code> → должно подключиться без пароля.</li>
+        <li><strong>RDP:</strong> двойной клик по <code>Cloud-ADM.rdp</code> → введите <code>P@ssw0rd</code>.</li>
       </ul>
-      <div class="success">
+      <div class="callout callout-success">
         ✅ Если всё работает — задание выполнено!
       </div>
     </section>
 
-    <section id="troubleshooting">
-      <h2>Частые ошибки и решения</h2>
-      <div class="warning">
+    <section id="troubleshooting" class="guide-section">
+      <h2>Частые ошибки</h2>
+      <div class="callout callout-warning">
         <strong>«Network error: Connection timed out»</strong><br>
-        Проверьте:
-        <ul>
-          <li>Привязан ли плавающий IP к ВМ?</li>
-          <li>Разрешён ли вход на порт 22 в security group?</li>
-        </ul>
+        Проверьте: плавающий IP привязан? Порт 22 открыт в security group?
       </div>
-      <div class="warning">
+      <div class="callout callout-warning">
         <strong>«Server refused our key»</strong><br>
-        Убедитесь, что:
-        <ul>
-          <li>Вы используете <code>.ppk</code>, а не <code>.pem</code> в PuTTY</li>
-          <li>Ключ был создан при создании ВМ (не старый!)</li>
-        </ul>
+        Убедитесь: используется <code>.ppk</code>, а не <code>.pem</code>; ключ создан при создании ВМ.
       </div>
-      <div class="tip">
+      <div class="callout callout-tip">
         <strong>RDP не работает?</strong><br>
-        Убедитесь, что выполнили все 4 команды (<code>apt-get update</code>, <code>install xrdp</code>, <code>chpasswd</code>, <code>enable xrdp</code>).
+        Выполнены все 4 команды? Особенно <code>chpasswd</code> и <code>enable xrdp</code>.
       </div>
     </section>
 
-    <section id="resources">
+    <section id="resources" class="guide-section">
       <h2>Полезные ссылки</h2>
       <ul>
-        <li><a href="https://losst.ru/nastrojka-putty-dlya-ssh" target="_blank">Настройка PuTTY для SSH (по-русски)</a></li>
-        <li><a href="https://help.ubuntu.com/community/xrdp" target="_blank">Как настроить xrdp на Linux</a></li>
-        <li><a href="https://www.altlinux.org/Docs" target="_blank">Официальная документация ALT Linux</a></li>
+        <li><a href="https://losst.ru/nastrojka-putty-dlya-ssh" target="_blank">Настройка PuTTY (по-русски)</a></li>
+        <li><a href="https://help.ubuntu.com/community/xrdp" target="_blank">xrdp на Linux</a></li>
+        <li><a href="https://www.altlinux.org/Docs" target="_blank">Документация ALT Linux</a></li>
       </ul>
     </section>
 
   </main>
 </div>
 
-<footer class="footer">
+<footer class="site-footer">
   <div class="container">
-    <p>© 2026 · Технический гайд · Для образовательных целей</p>
-    <p>Сайт можно разместить на GitHub Pages. Все команды протестированы на ALT Linux Workstation.</p>
+    <p>© 2026 TechGuides · Открытая техническая документация</p>
+    <p>Гайд подготовлен для образовательных целей. Все команды протестированы на ALT Linux Workstation.</p>
+    <p>Размещено на <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
   </div>
 </footer>
 

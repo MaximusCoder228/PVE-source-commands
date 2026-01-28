@@ -1,19 +1,26 @@
-/* Человечный, дружелюбный стиль — как на Habr / Dev.to */
+/* Современный стиль технической документации */
 :root {
   --bg: #ffffff;
-  --text: #1a1a1a;
-  --text-light: #555555;
-  --link: #0066cc;
-  --link-hover: #004c99;
-  --border: #e1e5e9;
-  --card-bg: #fafafa;
+  --text: #24292e;
+  --text-light: #57606a;
+  --border: #d0d7de;
   --code-bg: #f6f8fa;
-  --tip-bg: #e6f4ea;
+  --card-bg: #fafbfc;
+  --link: #0969da;
+  --link-hover: #054899;
+
+  --tip-bg: #ddf4e5;
   --tip-border: #34a853;
-  --warn-bg: #fdeded;
+  --warn-bg: #ffeaea;
   --warn-border: #d93025;
+  --info-bg: #f1f8ff;
+  --info-border: #0969da;
   --success-bg: #e8f5e9;
   --success-border: #4caf50;
+
+  --header-bg: #24292f;
+  --header-text: #ffffff;
+  --sidebar-bg: #f6f8fa;
 }
 
 * {
@@ -23,101 +30,171 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   background-color: var(--bg);
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .container {
-  max-width: 960px;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-/* Hero header */
-.hero {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 3rem 0 2.5rem;
-  margin-bottom: 2.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.hero h1 {
-  font-size: 2.4rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: #222;
-}
-.hero .lead {
-  font-size: 1.2rem;
-  color: var(--text-light);
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Layout */
-.toc-card {
+/* Header */
+.site-header {
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  padding: 1rem 0;
   position: sticky;
-  top: 1.5rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.toc-card h2 {
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
   font-size: 1.25rem;
-  margin-bottom: 1rem;
-  color: #333;
 }
-.toc-card ul {
-  list-style: none;
-}
-.toc-card li {
-  margin-bottom: 0.5rem;
-}
-.toc-card a {
-  color: var(--link);
+
+.top-nav a {
+  color: var(--header-text);
   text-decoration: none;
-  font-weight: 500;
+  margin-left: 1.5rem;
+  font-size: 0.95rem;
 }
-.toc-card a:hover {
+.top-nav a:hover {
   text-decoration: underline;
 }
 
-main {
-  flex: 1;
+/* Layout */
+.page-wrapper {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 0;
 }
 
-/* Sections */
-section {
+.sidebar {
+  width: 240px;
+  background: var(--sidebar-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 6rem;
+  align-self: flex-start;
+  border: 1px solid var(--border);
+}
+
+.sidebar h3 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #24292e;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+.sidebar li {
+  margin-bottom: 0.6rem;
+}
+.sidebar a {
+  color: var(--link);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+.content {
+  flex: 1;
+  max-width: 800px;
+}
+
+/* Content */
+.guide-section {
   margin-bottom: 2.5rem;
 }
-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1.2rem;
-  color: #222;
+
+.guide-section h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
 }
-section h3 {
+
+.guide-section h2 {
+  font-size: 1.8rem;
+  margin: 2rem 0 1.2rem;
+  color: #24292e;
+}
+
+.guide-section h3 {
   font-size: 1.4rem;
   margin: 1.4rem 0 0.8rem;
   color: #333;
 }
 
-p, ul, ol {
-  margin-bottom: 1rem;
+.lead {
+  font-size: 1.15rem;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
 }
-ul, ol {
-  padding-left: 1.5rem;
-}
-li { margin-bottom: 0.4rem; }
 
-/* Code & pre */
+/* Cards & Callouts */
+.card {
+  padding: 1.2rem;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+  border-left: 4px solid;
+}
+.card-info {
+  background: var(--info-bg);
+  border-left-color: var(--link);
+}
+
+.callout {
+  padding: 1.2rem;
+  border-radius: 10px;
+  margin: 1.4rem 0;
+  border-left: 4px solid;
+}
+.callout-tip {
+  background: var(--tip-bg);
+  border-left-color: var(--tip-border);
+  color: #2d5a2d;
+}
+.callout-warning {
+  background: var(--warn-bg);
+  border-left-color: var(--warn-border);
+  color: #8b0000;
+}
+.callout-success {
+  background: var(--success-bg);
+  border-left-color: var(--success-border);
+  color: #2e7d32;
+}
+
+/* Code */
 code {
   background: var(--code-bg);
   padding: 0.2em 0.4em;
   border-radius: 6px;
-  font-family: SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-family: SFMono-Regular, Consolas, monospace;
   font-size: 0.95em;
 }
+
 pre {
   background: var(--code-bg);
   padding: 1.2rem;
@@ -132,32 +209,6 @@ pre code {
   padding: 0;
 }
 
-/* Boxes */
-.requirements-box, .tip, .warning, .success {
-  padding: 1.2rem;
-  border-radius: 10px;
-  margin: 1.4rem 0;
-}
-.requirements-box {
-  background: var(--card-bg);
-  border-left: 4px solid #0066cc;
-}
-.tip {
-  background: var(--tip-bg);
-  border-left: 4px solid var(--tip-border);
-  color: #2d5a2d;
-}
-.warning {
-  background: var(--warn-bg);
-  border-left: 4px solid var(--warn-border);
-  color: #8b0000;
-}
-.success {
-  background: var(--success-bg);
-  border-left: 4px solid var(--success-border);
-  color: #2e7d32;
-}
-
 /* Links */
 a {
   color: var(--link);
@@ -169,34 +220,28 @@ a:hover {
 }
 
 /* Footer */
-.footer {
-  margin-top: 3rem;
+.site-footer {
+  background: var(--card-bg);
   padding: 2rem 0;
   border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+.site-footer p {
+  margin: 0.4rem 0;
   color: var(--text-light);
   font-size: 0.95rem;
 }
 
 /* Responsive */
-@media (min-width: 992px) {
-  .container {
-    display: flex;
-    gap: 2rem;
+@media (max-width: 992px) {
+  .page-wrapper {
+    flex-direction: column;
   }
-  .toc-card {
-    width: 280px;
-    flex-shrink: 0;
-  }
-  main {
-    flex: 1;
-  }
-}
-
-@media (max-width: 991px) {
-  .toc-card {
+  .sidebar {
     position: static;
-    margin-top: 0;
+    width: 100%;
   }
-  .hero h1 { font-size: 2rem; }
-  .hero .lead { font-size: 1.1rem; }
+  .top-nav {
+    display: none;
+  }
 }
