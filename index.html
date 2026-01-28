@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Гайд по настройке ИТ-инфраструктуры</title>
-    <!-- Подключение файла стилей -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,26 +11,27 @@
     <header>
         <h1>Гайд по настройке ИТ-инфраструктуры</h1>
         <nav>
-            <!-- Простое навигационное меню -->
             <a href="#glossary">Глоссарий</a>
-            <a href="#stage1">Подготовка</a>
+            <a href="#stage1">Базовая настройка</a>
             <a href="#stage2">Коммутация</a>
             <a href="#stage3">Маршрутизация</a>
-            <a href="#stage4">DNS</a>
-            <a href="#stage5">Центр сертификации</a>
-            <a href="#stage6">База данных</a>
-            <a href="#stage7">Хранилище</a>
-            <a href="#stage8">Active Directory</a>
-            <a href="#stage9">Мониторинг</a>
-            <a href="#stage10">VoIP</a>
+            <a href="#stage4">Туннели</a>
+            <a href="#stage5">Доступ в Интернет</a>
+            <a href="#stage6">Синхронизация времени</a>
+            <a href="#stage7">DNS</a>
+            <a href="#stage8">Центр сертификации</a>
+            <a href="#stage9">База данных</a>
+            <a href="#stage10">Хранилище</a>
+            <a href="#stage11">Active Directory</a>
+            <a href="#stage12">Мониторинг</a>
+            <a href="#stage13">VoIP</a>
         </nav>
     </header>
 
     <main>
-        <!-- Секция Вступление / Глоссарий -->
         <section id="introduction">
             <h2>Описание</h2>
-            <p>Этот сайт содержит подробные гайды по настройке различных компонентов типичной ИТ-инфраструктуры, включая маршрутизацию, коммутацию, DNS, Active Directory, системы хранения, мониторинг и VoIP.</p>
+            <p>Этот сайт содержит подробные гайды по настройке различных компонентов типичной ИТ-инфраструктуры, включая маршрутизацию, коммутацию, DNS, Active Directory, системы хранения, мониторинг и VoIP. Инструкции разбиты по этапам, соответствующим задачам из технического задания.</p>
             <p>Навигация по гайдам осуществляется через меню выше или через оглавление ниже.</p>
         </section>
 
@@ -189,10 +189,10 @@
             </table>
         </section>
 
-        <!-- Секция Этап 1 -->
+        <!-- Секция 1: Базовая настройка -->
         <section id="stage1">
-            <h2>Этап 1: Подготовительный</h2>
-            <p>Базовые настройки, необходимые для дальнейшей работы.</p>
+            <h2>Этап 1: Базовая настройка</h2>
+            <p>Настройка имен хостов и административного доступа.</p>
             <table>
                 <thead>
                     <tr>
@@ -204,64 +204,52 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Настройка FQDN</td>
+                        <td>1.1.a.i Настроить FQDN для ЦОД</td>
                         <td><code>sudo hostnamectl set-hostname &lt;имя&gt;.cod.ssa2026.region</code></td>
-                        <td>Изменение FQDN для устройств в ЦОД.</td>
-                        <td>rtr-cod, sw1-cod, sw2-cod, cli-cod, srv1-cod, srv2-cod, sip-cod, admin-cod</td>
+                        <td>Изменение FQDN для устройств в ЦОД (например, rtr-cod.cod.ssa2026.region).</td>
+                        <td>Все устройства ЦОД: rtr-cod, sw1-cod, sw2-cod, cli-cod, srv1-cod, srv2-cod, sip-cod, admin-cod</td>
                     </tr>
                     <tr>
-                        <td>Настройка FQDN для офиса a</td>
+                        <td>1.1.a.ii Настроить FQDN для офиса a</td>
                         <td><code>sudo hostnamectl set-hostname &lt;имя&gt;.office.ssa2026.region</code></td>
-                        <td>Изменение FQDN для устройств в офисе a.</td>
-                        <td>rtr-a, sw1-a, sw2-a, dc-a, cli1-a, cli2-a</td>
+                        <td>Изменение FQDN для устройств в офисе a (например, dc-a.office.ssa2026.region).</td>
+                        <td>Все устройства офиса a: rtr-a, sw1-a, sw2-a, dc-a, cli1-a, cli2-a</td>
                     </tr>
                     <tr>
-                        <td>Установка RADIUS-клиента</td>
-                        <td><code>opkg update && opkg install radcli</code></td>
+                        <td>1.2.a.i Установить RADIUS-клиент</td>
+                        <td><code>opkg update && opkg install radcli</code> (EcoRouterOS)</td>
                         <td>Установка клиента RADIUS на rtr-cod.</td>
                         <td>rtr-cod</td>
                     </tr>
                     <tr>
-                        <td>Настройка RADIUS-сервера</td>
+                        <td>1.2.a.ii Настроить RADIUS-сервер</td>
                         <td>(Установка и настройка FreeRADIUS на srv1-cod)</td>
-                        <td>На srv1-cod должен быть установлен и настроен RADIUS-сервер.</td>
+                        <td>На srv1-cod должен быть установлен и настроен RADIUS-сервер. Нужно создать пользователя netuser с паролем P@ssw0rd и привилегией 15 (или эквивалентом для CLI).</td>
                         <td>srv1-cod</td>
                     </tr>
                     <tr>
-                        <td>Настройка RADIUS-клиента на rtr-cod (CLI)</td>
+                        <td>1.2.a.iii Настроить RADIUS-клиент на rtr-cod (CLI)</td>
                         <td>В CLI: <code>radius-server host srv1-cod key P@ssw0rd</code>, <code>aaa new-model</code>, <code>aaa authentication login default group radius local</code></td>
-                        <td>Указание сервера, ключа и метода аутентификации. local — резерв.</td>
+                        <td>Указание сервера, ключа и метода аутентификации. 'local' — резерв.</td>
                         <td>rtr-cod (через CLI)</td>
                     </tr>
                     <tr>
-                        <td>Проверка отсутствия локального netuser</td>
-                        <td>Убедиться, что netuser не существует в /etc/passwd на rtr-cod.</td>
-                        <td>Имя netuser не должно быть локальным.</td>
+                        <td>1.2.a.iii.1 Проверка отсутствия локального netuser</td>
+                        <td>Проверить /etc/passwd или show users</td>
+                        <td>Имя netuser не должно быть локальным пользователем на rtr-cod.</td>
                         <td>rtr-cod</td>
                     </tr>
                     <tr>
-                        <td>Настройка привилегий для netuser на srv1-cod</td>
-                        <td>(В конфигурации FreeRADIUS)</td>
-                        <td>Пользователь должен иметь права конфигурировать маршрутизатор.</td>
+                        <td>1.2.a.iii.2 Проверка привилегий для netuser на srv1-cod</td>
+                        <td>(Настройка в конфигурации FreeRADIUS)</td>
+                        <td>Пользователь netuser должен иметь права конфигурировать маршрутизатор (Privilege-Level 15).</td>
                         <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настройка NTP</td>
-                        <td><code>sudo timedatectl set-ntp true</code> или настройка chrony</td>
-                        <td>Синхронизация времени с 100.100.100.100.</td>
-                        <td>Все устройства</td>
-                    </tr>
-                    <tr>
-                        <td>Настройка часового пояса</td>
-                        <td><code>sudo timedatectl set-timezone Europe/Moscow</code></td>
-                        <td>Установка московского часового пояса.</td>
-                        <td>Все устройства</td>
                     </tr>
                 </tbody>
             </table>
         </section>
 
-        <!-- Секция Этап 2 -->
+        <!-- Секция 2: Коммутация -->
         <section id="stage2">
             <h2>Этап 2: Коммутация</h2>
             <p>Настройка VLAN, агрегации каналов и STP.</p>
@@ -276,74 +264,50 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Создать VLAN на sw1-cod, sw2-cod</td>
-                        <td><code>sudo ip link add link eth0 name eth0.100 type vlan id 100</code></td>
-                        <td>Создаем подинтерфейс для VLAN 100.</td>
+                        <td>2.1.a.b Настроить Trunk между sw1-cod и sw2-cod</td>
+                        <td>Создать VLAN-интерфейсы: <code>sudo ip link add link eth0 name eth0.100 type vlan id 100</code>, ..., <code>sudo ip link add link eth0 name eth0.500 type vlan id 500</code>; Добавить в бридж: <code>sudo brctl addif br-trunk eth0.100</code>, ..., <code>sudo brctl addif br-trunk eth0.500</code></td>
+                        <td>Настройка портов как Trunk, разрешающих VLAN 100-500.</td>
                         <td>sw1-cod, sw2-cod</td>
                     </tr>
                     <tr>
-                        <td>Повторить для VLAN 200, 300, 400, 500</td>
-                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code> и т.д.</td>
-                        <td></td>
-                        <td>sw1-cod, sw2-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить Bridge и добавить VLAN</td>
-                        <td><code>sudo brctl addbr br-vlan100</code>, <code>sudo brctl addif br-vlan100 eth0.100</code></td>
-                        <td>Создаем бридж для VLAN 100 и добавляем туда подинтерфейс.</td>
-                        <td>sw1-cod, sw2-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить порты как Access или Trunk (L2 диаграмма)</td>
-                        <td>Для Access: добавить физический порт в нужный бридж. Для Trunk: использовать bridge vlan add vid X tagged dev ethY.</td>
-                        <td>Следуем схеме L2 и таблице VLAN.</td>
-                        <td>sw1-cod, sw2-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить IP-адреса управления (VLAN MGMT-COD)</td>
-                        <td><code>sudo ip addr add 10.0.3.10/24 dev br-mgmt</code> (пример для sw1-cod).</td>
+                        <td>2.1.c.i Настроить IP-адреса управления (VLAN MGMT-COD)</td>
+                        <td><code>sudo ip addr add 10.0.3.10/24 dev br-mgmt</code> (для sw1-cod), <code>sudo ip addr add 10.0.3.11/24 dev br-mgmt</code> (для sw2-cod)</td>
                         <td>IP для управления в VLAN 300.</td>
                         <td>sw1-cod, sw2-cod</td>
                     </tr>
                     <tr>
-                        <td>Запретить маршрутизацию VLAN-DATA</td>
-                        <td>Убедиться, что бридж для VLAN 200 (br-data) не имеет назначенного IP или маршрутизатора.</td>
-                        <td>Трафик VLAN-DATA не должен покидать коммутатор.</td>
+                        <td>2.1.c.iii.iv Запретить маршрутизацию VLAN-DATA (MGMT-COD через Native VLAN)</td>
+                        <td>Убедиться, что бридж для VLAN 200 (br-data) не имеет назначенного IP или маршрутизатора. Настроить порт на коммутаторе как Trunk с Native VLAN 300.</td>
+                        <td>Трафик VLAN-DATA (200) не должен маршрутизироваться. Управление через Native VLAN 300.</td>
                         <td>sw1-cod, sw2-cod</td>
                     </tr>
                     <tr>
-                        <td>Создать агрегацию (bonding) между sw1-cod и sw2-cod</td>
+                        <td>2.2.a.b Создать агрегацию (bonding) между sw1-cod и sw2-cod</td>
                         <td><code>sudo modprobe bonding mode=active-backup miimon=100</code>, <code>sudo ip link add bond0 type bond mode active-backup miimon 100</code>, <code>sudo ip link set eth3 master bond0</code>, <code>sudo ip link set eth4 master bond0</code>, <code>sudo brctl addif br-mgmt bond0</code>.</td>
-                        <td>Объединение физических портов в логический канал с резервированием.</td>
+                        <td>Объединение физических портов eth3 и eth4 в логический канал bond0 с резервированием. Добавление bond0 в бридж управления (br-mgmt).</td>
                         <td>sw1-cod, sw2-cod</td>
                     </tr>
                     <tr>
-                        <td>Включить STP на sw1-a, sw2-a</td>
-                        <td><code>sudo brctl stp br-data on</code></td>
-                        <td>Включаем протокол STP на мосте br-data.</td>
+                        <td>2.3.a.c Запустить STP и использовать 802.1w</td>
+                        <td><code>sudo brctl stp br-data on</code> (на sw1-a, sw2-a)</td>
+                        <td>Включаем протокол STP (обычно RSTP/802.1w по умолчанию) на бридж для данных (или общий бридж, если нет отдельного).</td>
                         <td>sw1-a, sw2-a</td>
                     </tr>
                     <tr>
-                        <td>Установить приоритет STP</td>
+                        <td>2.3.b Установить приоритет STP</td>
                         <td><code>sudo brctl setbridgeprio br-data 8192</code> (на sw1-a).</td>
                         <td>Меньшее значение делает sw1-a корневым мостом.</td>
                         <td>sw1-a</td>
                     </tr>
                     <tr>
-                        <td>Настроить 802.1w (RSTP)</td>
-                        <td>(Обычно это поведение по умолчанию)</td>
-                        <td>Использовать RSTP.</td>
+                        <td>2.1.a.b Настроить Trunk/Access для офиса a</td>
+                        <td>Следуя схеме L2 и таблице VLAN. Например, для порта к cli1-a: <code>sudo brctl addif br-cli eth0</code> (где br-cli - бридж для VLAN 200).</td>
+                        <td>Настройка портов как Access или Trunk для VLAN 100, 200, 300.</td>
                         <td>sw1-a, sw2-a</td>
                     </tr>
                     <tr>
-                        <td>Настроить порты как Access или Trunk для офиса a</td>
-                        <td>Следуя схеме L2 и таблице VLAN.</td>
-                        <td></td>
-                        <td>sw1-a, sw2-a</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить IP-адреса управления (VLAN MGMT-A)</td>
-                        <td><code>sudo ip addr add 10.0.3.110/24 dev br-mgmt</code> (пример для sw1-a).</td>
+                        <td>2.1.c.ii Настроить IP-адреса управления (VLAN MGMT-A)</td>
+                        <td><code>sudo ip addr add 10.0.3.110/24 dev br-mgmt</code> (для sw1-a), <code>sudo ip addr add 10.0.3.111/24 dev br-mgmt</code> (для sw2-a).</td>
                         <td>IP для управления в VLAN 300.</td>
                         <td>sw1-a, sw2-a</td>
                     </tr>
@@ -351,10 +315,10 @@
             </table>
         </section>
 
-        <!-- Секция Этап 3 -->
+        <!-- Секция 3: Маршрутизация -->
         <section id="stage3">
             <h2>Этап 3: Маршрутизация</h2>
-            <p>Настройка BGP, OSPF, GRE.</p>
+            <p>Настройка BGP, OSPF.</p>
             <table>
                 <thead>
                     <tr>
@@ -366,105 +330,189 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Установить FRRouting</td>
-                        <td><code>opkg update && opkg install frr frr-bgp frr-ospf</code></td>
+                        <td>3.1.a Установить FRRouting</td>
+                        <td><code>opkg update && opkg install frr frr-bgp frr-ospf</code> (EcoRouterOS)</td>
                         <td>Установка FRRouting на rtr-cod.</td>
                         <td>rtr-cod</td>
                     </tr>
                     <tr>
-                        <td>Настроить BGP с GIGAFON COD</td>
-                        <td>В /etc/frr/bgpd.conf: <code>router bgp 64500</code>, <code>neighbor 178.207.179.1 remote-as 31133</code>, ...</td>
-                        <td>Настройка BGP-сессии с AS 31133.</td>
+                        <td>3.1.a.b Настроить BGP с GIGAFON COD</td>
+                        <td>В /etc/frr/bgpd.conf: <code>router bgp 64500</code>, <code>neighbor 178.207.179.1 remote-as 31133</code>, <code>address-family ipv4 unicast</code>, <code>neighbor 178.207.179.1 default-originate</code>, <code>exit-address-family</code>.</td>
+                        <td>Настройка BGP-сессии с AS 31133 (GIGAFON). default-originate позволяет отправлять маршрут по умолчанию.</td>
                         <td>rtr-cod</td>
                     </tr>
                     <tr>
-                        <td>Запретить анонс внутренних сетей (фильтр)</td>
-                        <td>В /etc/frr/bgpd.conf: ip prefix-list, route-map...</td>
-                        <td>Блокировка анонсов внутренних сетей в интернет.</td>
+                        <td>3.1.b Запретить анонс внутренних сетей (фильтр)</td>
+                        <td>В /etc/frr/bgpd.conf: <code>ip prefix-list INTERNAL seq 5 permit 10.0.0.0/8 le 32</code>, <code>route-map BLOCK_INTERNAL deny 10</code>, <code>match ip address prefix-list INTERNAL</code>, <code>route-map BLOCK_INTERNAL permit 20</code>, <code>router bgp 64500</code>, <code>neighbor 178.207.179.1 route-map BLOCK_INTERNAL out</code>.</td>
+                        <td>Создание списка префиксов (наши внутренние сети 10.0.0.0/8), создание маршрутной карты (route-map), которая блокирует их (deny), и применение этой карты к исходящим анонсам соседу.</td>
                         <td>rtr-cod</td>
                     </tr>
                     <tr>
-                        <td>Настроить OSPF между rtr-cod, rtr-a, fw-cod</td>
-                        <td>В /etc/frr/ospfd.conf: <code>router ospf</code>, network...</td>
-                        <td>Настройка OSPF в области 0.</td>
+                        <td>3.2.a Настроить OSPF между rtr-cod, rtr-a, fw-cod</td>
+                        <td>В /etc/frr/ospfd.conf: <code>router ospf</code>, <code>ospf router-id &lt;IP_роутера&gt;</code>, <code>network &lt;сеть&gt; area 0</code>.</td>
+                        <td>Настройка OSPF в области 0 между указанными маршрутизаторами.</td>
                         <td>rtr-cod, rtr-a, fw-cod</td>
                     </tr>
                     <tr>
-                        <td>Настроить аутентификацию OSPF (MD5)</td>
-                        <td>В /etc/frr/ospfd.conf: area 0 authentication...</td>
-                        <td>Использование MD5 для защиты OSPF-пакетов.</td>
+                        <td>3.2.b Перевести интерфейсы в пассивный режим</td>
+                        <td>В /etc/frr/ospfd.conf: <code>passive-interface ethY</code> (для всех интерфейсов, кроме туннельного).</td>
+                        <td>Предотвращение отправки Hello-пакетов на указанные интерфейсы, но сохранение маршрута.</td>
                         <td>rtr-cod, rtr-a, fw-cod</td>
                     </tr>
                     <tr>
-                        <td>Перевести интерфейсы в пассивный режим (кроме туннельных)</td>
-                        <td>В /etc/frr/ospfd.conf: <code>passive-interface ethY</code>.</td>
-                        <td>Предотвращение отправки Hello-пакетов на указанные интерфейсы.</td>
+                        <td>3.2.c.i.ii Настроить аутентификацию OSPF (MD5)</td>
+                        <td>В /etc/frr/ospfd.conf: <code>area 0 authentication message-digest</code>, <code>interface ethX</code>, <code>ip ospf message-digest-key 1 md5 P@ssw0rd</code>.</td>
+                        <td>Использование MD5 для защиты OSPF-пакетов. Пароль P@ssw0rd.</td>
                         <td>rtr-cod, rtr-a, fw-cod</td>
                     </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция 4: Туннели -->
+        <section id="stage4">
+            <h2>Этап 4: Туннели</h2>
+            <p>Настройка GRE туннеля между офисом "а" и "cod".</p>
+            <table>
+                <thead>
                     <tr>
-                        <td>Создать GRE-туннель между rtr-a и rtr-cod</td>
-                        <td><code>sudo ip tunnel add gre1 mode gre remote ... local ... ttl 255</code>, ...</td>
-                        <td>Создание виртуального канала.</td>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4.1.a.b Создать GRE-туннель между rtr-a и rtr-cod</td>
+                        <td><strong>На rtr-a:</strong> <code>sudo ip tunnel add gre1 mode gre remote 10.10.10.2 local 10.10.10.1 ttl 255</code>, <code>sudo ip link set gre1 up</code>, <code>sudo ip addr add 10.10.10.1/30 dev gre1</code>. <strong>На rtr-cod:</strong> <code>sudo ip tunnel add gre1 mode gre remote 10.10.10.1 local 10.10.10.2 ttl 255</code>, <code>sudo ip link set gre1 up</code>, <code>sudo ip addr add 10.10.10.2/30 dev gre1</code>.</td>
+                        <td>Создание виртуального канала GRE между rtr-a и rtr-cod в сети 10.10.10.0/24. Используется маска /30 для туннельных интерфейсов.</td>
                         <td>rtr-a, rtr-cod</td>
                     </tr>
                     <tr>
-                        <td>Добавить маршрут через туннель</td>
-                        <td><code>sudo ip route add 10.0.2.0/24 via ... dev gre1</code></td>
-                        <td>Маршрут к сети офиса a.</td>
+                        <td>4.1.b (Дополнительно) Добавить маршрут через туннель</td>
+                        <td><strong>На rtr-a:</strong> <code>sudo ip route add 10.0.2.0/24 via 10.10.10.2 dev gre1</code>. <strong>На rtr-cod:</strong> <code>sudo ip route add 10.0.2.0/24 via 10.10.10.1 dev gre1</code>.</td>
+                        <td>Маршруты к сетям офиса a (например, 10.0.2.0/24) через туннель.</td>
                         <td>rtr-a, rtr-cod</td>
                     </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция 5: Доступ в Интернет -->
+        <section id="stage5">
+            <h2>Этап 5: Доступ в Интернет</h2>
+            <p>Настройка маршрутизаторов для обеспечения доступа в Интернет.</p>
+            <table>
+                <thead>
                     <tr>
-                        <td>Настройка доступа в Интернет</td>
-                        <td>Убедиться, что маршрут по умолчанию получен через BGP.</td>
-                        <td></td>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>5.1 Настройка доступа в Интернет</td>
+                        <td>Убедиться, что маршрут по умолчанию (0.0.0.0/0) получен через BGP на rtr-cod (см. Этап 3, задача 3.1.a.b).</td>
+                        <td>Доступ в интернет обеспечивается через rtr-cod, который получает маршрут по умолчанию от провайдера GIGAFON.</td>
                         <td>rtr-cod</td>
                     </tr>
                 </tbody>
             </table>
         </section>
 
-        <!-- Секция Этап 4 -->
-        <section id="stage4">
-            <h2>Этап 4: DNS</h2>
+        <!-- Секция 6: Синхронизация времени -->
+        <section id="stage6">
+            <h2>Этап 6: Синхронизация времени</h2>
+            <p>Настройка синхронизации времени между сетевыми устройствами.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Команда / Действие</th>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>6.1 Синхронизация времени</td>
+                        <td><code>sudo timedatectl set-ntp true</code> или настроить chrony вручную (<code>sudo nano /etc/chrony/chrony.conf</code>, добавить <code>server 100.100.100.100 iburst</code>, <code>sudo systemctl restart chrony</code>).</td>
+                        <td>Синхронизация времени с сервером 100.100.100.100.</td>
+                        <td>Все устройства</td>
+                    </tr>
+                    <tr>
+                        <td>6.2 Часовой пояс</td>
+                        <td><code>sudo timedatectl set-timezone Europe/Moscow</code></td>
+                        <td>Установка московского часового пояса.</td>
+                        <td>Все устройства</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Секция 7: DNS -->
+        <section id="stage7">
+            <h2>Этап 7: DNS</h2>
             <p>Настройка службы доменных имен.</p>
             <table>
                 <thead>
                     <tr>
                         <th>Задача</th>
                         <th>Команда / Действие</th>
-                        <td>Пояснение</td>
-                        <td>Где выполнять</td>
+                        <th>Пояснение</th>
+                        <th>Где выполнять</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Установить DNS-сервер (BIND9)</td>
-                        <td><code>sudo apt update && sudo apt install bind9</code></td>
-                        <td>Устанавливаем BIND9.</td>
+                        <td>7.1.a.b Создать A и PTR записи для cod</td>
+                        <td>Создать файлы зон: <code>sudo nano /etc/bind/db.cod.ssa2026.region</code> (A-записи), <code>sudo nano /etc/bind/db.1.0.10</code>, <code>db.2.0.10</code> и т.д. (PTR-записи). Пример A: <code>rtr-cod IN A 10.0.1.1</code>. Пример PTR: <code>1.1.0.10.in-addr.arpa. IN PTR rtr-cod.cod.ssa2026.region.</code></td>
+                        <td>Создание прямых и обратных записей для устройств ЦОД.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>7.2.a.b Создать A и PTR записи для a</td>
+                        <td>Создать файлы зон: <code>sudo nano /etc/bind/db.office.ssa2026.region</code> (A-записи), <code>sudo nano /etc/bind/db.2.0.10</code>, <code>db.3.0.10</code> (PTR-записи). Пример A: <code>cli1-a IN A 10.0.2.100</code>. Пример PTR: <code>100.2.0.10.in-addr.arpa. IN PTR cli1-a.office.ssa2026.region.</code></td>
+                        <td>Создание прямых и обратных записей для устройств офиса a.</td>
+                        <td>dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>7.3 Переадресация</td>
+                        <td>В <code>/etc/bind/named.conf.options</code>: <code>options { forwarders { 100.100.100.100; }; };</code></td>
+                        <td>Запрашиваемые имена, которые не могут быть разрешены локально, будут отправлены на 100.100.100.100.</td>
                         <td>srv1-cod, dc-a</td>
                     </tr>
                     <tr>
-                        <td>Создать файл зоны и наполнить A/PTR записями</td>
-                        <td>(Создание db.cod.ssa2026.region, db.office.ssa2026.region и обратных)</td>
-                        <td>Определение записей A и PTR.</td>
+                        <td>7.4 Настройка DNS-серверов</td>
+                        <td>В <code>/etc/resolv.conf</code>: <code>nameserver 10.0.1.1</code> (для ЦОД), <code>nameserver 10.0.1.100</code> (для офиса a).</td>
+                        <td>Устройства ЦОД используют srv1-cod, офис a - dc-a.</td>
+                        <td>Все устройства (ЦОД и офис a)</td>
+                    </tr>
+                    <tr>
+                        <td>7.5.a Настройка перенаправления (forwarding rules)</td>
+                        <td><strong>На srv1-cod:</strong> В <code>/etc/bind/named.conf.options</code>: <code>zone "office.ssa2026.region" { type forward; forward only; forwarders { 10.0.1.100; }; };</code>. <strong>На dc-a:</strong> В <code>/etc/bind/named.conf.options</code>: <code>zone "cod.ssa2026.region" { type forward; forward only; forwarders { 10.0.1.1; }; };</code>.</td>
+                        <td>srv1-cod перенаправляет запросы к office.ssa2026.region на dc-a. dc-a перенаправляет запросы к cod.ssa2026.region на srv1-cod.</td>
                         <td>srv1-cod, dc-a</td>
+                    </tr>
+                    <tr>
+                        <td>7.1.a Установить DNS-сервер (BIND9) на srv1-cod</td>
+                        <td><code>sudo apt update && sudo apt install bind9</code></td>
+                        <td>Устанавливаем BIND9.</td>
+                        <td>srv1-cod</td>
+                    </tr>
+                    <tr>
+                        <td>7.2.a Установить DNS-сервер (BIND9) на dc-a</td>
+                        <td><code>sudo apt update && sudo apt install bind9</code></td>
+                        <td>Устанавливаем BIND9.</td>
+                        <td>dc-a</td>
                     </tr>
                     <tr>
                         <td>Настроить named.conf.local</td>
-                        <td><code>sudo nano /etc/bind/named.conf.local</code></td>
-                        <td>Добавление зон.</td>
-                        <td>srv1-cod, dc-a</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить переадресацию (forwarder)</td>
-                        <td>В named.conf.options: <code>forwarders { 100.100.100.100; };</code></td>
-                        <td>Переадресация неизвестных запросов.</td>
-                        <td>srv1-cod, dc-a</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить перенаправление между DNS-серверами (forwarding rules)</td>
-                        <td>В named.conf.options: zone "office.ssa2026.region" type forward...</td>
-                        <td>Перенаправление между srv1-cod и dc-a.</td>
+                        <td>В <code>/etc/bind/named.conf.local</code>: <code>zone "cod.ssa2026.region" { type master; file "/etc/bind/db.cod.ssa2026.region"; };</code> и т.д. для обратных зон. Аналогично на dc-a.</td>
+                        <td>Указываем файлы зон.</td>
                         <td>srv1-cod, dc-a</td>
                     </tr>
                     <tr>
@@ -473,19 +521,13 @@
                         <td>Применение изменений.</td>
                         <td>srv1-cod, dc-a</td>
                     </tr>
-                    <tr>
-                        <td>Настроить DNS-сервера в resolv.conf</td>
-                        <td><code>sudo nano /etc/resolv.conf</code> и добавить nameserver</td>
-                        <td>Указание основного DNS-сервера для устройств.</td>
-                        <td>Все устройства</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
 
-        <!-- Секция Этап 5 -->
-        <section id="stage5">
-            <h2>Этап 5: Центр сертификации</h2>
+        <!-- Секция 8: Центр сертификации -->
+        <section id="stage8">
+            <h2>Этап 8: Центр сертификации</h2>
             <p>Настройка CA.</p>
             <table>
                 <thead>
@@ -498,42 +540,30 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Установить OpenSSL</td>
-                        <td><code>sudo apt install openssl</code></td>
-                        <td>Устанавливаем OpenSSL.</td>
+                        <td>8.1.a-e Установить OpenSSL, создать директорию, конфиг, ключ и сертификат</td>
+                        <td><code>sudo apt install openssl</code>; <code>sudo mkdir -p /var/ca/{certs,crl,newcerts,private}</code>; <code>sudo touch /var/ca/index.txt</code>; <code>echo 1000 | sudo tee /var/ca/serial</code>; <code>sudo nano /var/ca/ca.conf</code> (создать конфиг); <code>sudo openssl genrsa -out /var/ca/private/cakey.pem 4096</code>; <code>sudo openssl req -config /var/ca/ca.conf -new -x509 -days 1825 -key /var/ca/private/cakey.pem -out /var/ca/certs/cacert.pem</code>.</td>
+                        <td>Создание структуры директорий, конфигурационного файла, генерация ключа и самоподписанного корневого сертификата на 5 лет (1825 дней).</td>
                         <td>srv1-cod</td>
                     </tr>
                     <tr>
-                        <td>Создать директорию для CA</td>
-                        <td><code>sudo mkdir -p /var/ca/{certs,crl,newcerts,private}</code></td>
-                        <td>Создаем структуру директорий.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Создать конфигурационный файл CA</td>
-                        <td><code>sudo nano /var/ca/ca.conf</code></td>
-                        <td>Конфигурация для openssl.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Сгенерировать приватный ключ и корневой сертификат</td>
-                        <td><code>sudo openssl genrsa...</code>, <code>sudo openssl req -new -x509...</code></td>
-                        <td>Создание ключа и самоподписанного сертификата.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Установить сертификат CA на рабочие станции</td>
-                        <td><code>sudo cp cacert.pem /usr/local/share/ca-certificates/...</code>, <code>sudo update-ca-certificates</code></td>
+                        <td>8.2 Установить сертификат CA на рабочие станции</td>
+                        <td>Скопировать <code>cacert.pem</code> на cli-cod, cli1-a, cli2-a, admin-cod. Затем: <code>sudo cp cacert.pem /usr/local/share/ca-certificates/ssa2026.crt</code>, <code>sudo update-ca-certificates</code>.</td>
                         <td>Добавляем корневой сертификат в доверенные.</td>
                         <td>cli-cod, cli1-a, cli2-a, admin-cod</td>
+                    </tr>
+                    <tr>
+                        <td>8.3 Использовать созданный центр сертификации</td>
+                        <td>(Пример: выпуск сертификата для Zabbix)</td>
+                        <td>CA будет использоваться для подписи сертификатов, например, для HTTPS веб-интерфейса Zabbix.</td>
+                        <td>srv1-cod (при настройке Zabbix)</td>
                     </tr>
                 </tbody>
             </table>
         </section>
 
-        <!-- Секция Этап 6 -->
-        <section id="stage6">
-            <h2>Этап 6: База данных</h2>
+        <!-- Секция 9: База данных -->
+        <section id="stage9">
+            <h2>Этап 9: База данных</h2>
             <p>Настройка PostgreSQL.</p>
             <table>
                 <thead>
@@ -546,32 +576,32 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Установить PostgreSQL (версия >= 17)</td>
-                        <td><code>sudo apt install postgresql-17</code></td>
+                        <td>9.1.a.i Установить PostgreSQL (версия >= 17)</td>
+                        <td><code>sudo apt update && sudo apt install postgresql-17</code></td>
                         <td>Устанавливаем PostgreSQL.</td>
                         <td>srv2-cod</td>
                     </tr>
                     <tr>
-                        <td>Запустить и включить службу PostgreSQL</td>
+                        <td>9.1.a.i Запустить и включить службу PostgreSQL</td>
                         <td><code>sudo systemctl start postgresql</code>, <code>sudo systemctl enable postgresql</code></td>
                         <td>Запуск и автозапуск.</td>
                         <td>srv2-cod</td>
                     </tr>
                     <tr>
-                        <td>Создать суперпользователя superadmin</td>
-                        <td><code>sudo -u postgres psql -c "CREATE USER superadmin..."</code></td>
+                        <td>9.1.c.i Создать суперпользователя superadmin</td>
+                        <td><code>sudo -u postgres psql -c "CREATE USER superadmin WITH SUPERUSER PASSWORD 'P@ssw0rdSQL';"</code></td>
                         <td>Создаем нового суперпользователя.</td>
                         <td>srv2-cod</td>
                     </tr>
                     <tr>
-                        <td>Установить DBeaver на admin-cod</td>
+                        <td>9.2.a Установить DBeaver на admin-cod</td>
                         <td><code>sudo apt install dbeaver-ce</code> или скачать</td>
                         <td>Устанавливаем клиент для администрирования.</td>
                         <td>admin-cod</td>
                     </tr>
                     <tr>
-                        <td>Настроить DBeaver (на admin-cod)</td>
-                        <td>(Создание подключения)</td>
+                        <td>9.2.a Настроить DBeaver (на admin-cod)</td>
+                        <td>(Создание подключения к srv2-cod, указание хоста, порта, имени пользователя superadmin, пароля)</td>
                         <td>Подключаемся к базе данных.</td>
                         <td>admin-cod</td>
                     </tr>
@@ -579,9 +609,9 @@
             </table>
         </section>
 
-        <!-- Секция Этап 7 -->
-        <section id="stage7">
-            <h2>Этап 7: Хранилище</h2>
+        <!-- Секция 10: Хранилище -->
+        <section id="stage10">
+            <h2>Этап 10: Хранилище</h2>
             <p>Настройка iSCSI, LVM, NFS.</p>
             <table>
                 <thead>
@@ -594,90 +624,48 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Настроить VLAN DATA на srv2-cod</td>
-                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code> и т.д.</td>
+                        <td>10.1.a Настроить VLAN DATA на srv2-cod</td>
+                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code>, <code>sudo ip link set eth0.200 up</code>, <code>sudo ip addr add 10.0.2.202/24 dev eth0.200</code></td>
                         <td>Поднимаем интерфейс VLAN DATA.</td>
                         <td>srv2-cod</td>
                     </tr>
                     <tr>
-                        <td>Установить iSCSI Target</td>
-                        <td><code>sudo apt install targetcli-fb</code></td>
-                        <td>Устанавливаем утилиту для настройки iSCSI Target.</td>
+                        <td>10.1.b.i.ii Настроить iSCSI Target</td>
+                        <td><code>sudo apt install targetcli-fb</code>; <code>sudo targetcli /backstores/block create data_block /dev/&lt;free_disk&gt;</code>; <code>sudo targetcli /iscsi create iqn.2026-01.region.ssa2026.cod:data.target</code>; <code>sudo targetcli /iscsi/iqn.2026-01.region.ssa2026.cod:data.target/tpg1/luns create /backstores/block/data_block</code>; <code>sudo targetcli /iscsi/iqn.2026-01.region.ssa2026.cod:data.target/tpg1/acls create iqn.2026-01.region.ssa2026.cod:iscsi</code>; <code>sudo targetcli saveconfig</code>.</td>
+                        <td>Устанавливаем targetcli, создаем backstore (блок устройства), создаем iSCSI target с указанным IQN, привязываем backstore к target, настраиваем ACL (доступ для инициатора), сохраняем конфигурацию.</td>
                         <td>srv2-cod</td>
                     </tr>
                     <tr>
-                        <td>Создать iSCSI Target</td>
-                        <td><code>sudo targetcli /backstores/block create...</code></td>
-                        <td>Создаем target, привязываем диск, настраиваем ACL.</td>
-                        <td>srv2-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить VLAN DATA на srv1-cod</td>
-                        <td><code>sudo ip link add link eth0 name eth0.200 type vlan id 200</code> и т.д.</td>
-                        <td>Поднимаем интерфейс VLAN DATA.</td>
+                        <td>10.2.a.i.ii.iii Настроить iSCSI Initiator на srv1-cod</td>
+                        <td><code>sudo apt install open-iscsi</code>; <code>sudo nano /etc/iscsi/initiatorname.iscsi</code> (установить <code>InitiatorName=iqn.2026-01.region.ssa2026.cod:iscsi</code>); <code>sudo systemctl restart iscsid</code>; <code>sudo iscsiadm -m discovery -t sendtargets -p 10.0.2.202</code>; <code>sudo iscsiadm -m node -T iqn.2026-01.region.ssa2026.cod:data.target -p 10.0.2.202:3260 -l</code>.</td>
+                        <td>Устанавливаем open-iscsi, указываем имя инициатора, перезапускаем демон, находим target, открываем сессию.</td>
                         <td>srv1-cod</td>
                     </tr>
                     <tr>
-                        <td>Установить iSCSI Initiator</td>
-                        <td><code>sudo apt install open-iscsi</code></td>
-                        <td>Устанавливаем клиента iSCSI.</td>
+                        <td>10.2.b.i.ii.iii.iv Настроить LVM на srv1-cod</td>
+                        <td><code>sudo pvcreate /dev/&lt;новый_диск_от_target&gt;</code> (например, /dev/sda); <code>sudo vgcreate VG /dev/&lt;новый_диск_от_target&gt;</code>; <code>sudo lvcreate -l 100%FREE -n DATA VG</code>; <code>sudo mkfs.xfs /dev/VG/DATA</code>.</td>
+                        <td>Создаем физический том из диска iSCSI, группу томов VG, логический том DATA, форматируем под XFS.</td>
                         <td>srv1-cod</td>
                     </tr>
                     <tr>
-                        <td>Подключиться к Target</td>
-                        <td><code>sudo iscsiadm -m discovery...</code>, <code>sudo iscsiadm -m node...</code></td>
-                        <td>Открываем сессию с target.</td>
+                        <td>10.2.b.v.vi Настроить монтирование и NFS</td>
+                        <td><strong>Монтирование:</strong> <code>sudo nano /etc/fstab</code> (добавить <code>/dev/VG/DATA /opt/data xfs defaults 0 0</code>); <code>sudo mkdir -p /opt/data</code>; <code>sudo mount /opt/data</code>. <strong>NFS:</strong> <code>sudo apt install nfs-kernel-server</code>; <code>sudo nano /etc/exports</code> (добавить <code>/opt/data 10.0.3.0/24(rw,sync,no_root_squash,no_subtree_check)</code>); <code>sudo exportfs -ra</code>; <code>sudo systemctl restart nfs-server</code>.</td>
+                        <td>Настройка автоматического монтирования LVM-тома и экспорта директории /opt/data по NFS для сети MGMT-COD.</td>
                         <td>srv1-cod</td>
                     </tr>
                     <tr>
-                        <td>Настроить LVM на iSCSI диске</td>
-                        <td><code>sudo pvcreate /dev/sda</code>, <code>sudo vgcreate VG /dev/sda</code> и т.д.</td>
-                        <td>Создаем физический том, группу томов, логический том.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Создать файловую систему XFS</td>
-                        <td><code>sudo mkfs.xfs /dev/VG/DATA</code></td>
-                        <td>Форматируем LV под XFS.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить монтирование в /etc/fstab</td>
-                        <td><code>sudo nano /etc/fstab</code> и добавить запись</td>
-                        <td>Автоматическое монтирование при загрузке.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Установить NFS-сервер</td>
-                        <td><code>sudo apt install nfs-kernel-server</code></td>
-                        <td>Устанавливаем NFS-сервер.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить экспорт /opt/data</td>
-                        <td><code>sudo nano /etc/exports</code> и добавить запись</td>
-                        <td>Открываем доступ к /opt/data.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Экспортировать директорию</td>
-                        <td><code>sudo exportfs -ra</code>, <code>sudo systemctl restart nfs-server</code></td>
-                        <td>Применяем изменения.</td>
-                        <td>srv1-cod</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить автомонтирование NFS на admin-cod</td>
-                        <td><code>sudo nano /etc/fstab</code> и добавить запись</td>
-                        <td>Автомонтирование.</td>
+                        <td>10.3 Настроить автомонтирование NFS на admin-cod</td>
+                        <td><code>sudo mkdir -p /mnt/nfs</code>; <code>sudo nano /etc/fstab</code> (добавить <code>srv1-cod.cod.ssa2026.region:/opt/data /mnt/nfs nfs defaults 0 0</code>); <code>sudo mount /mnt/nfs</code>.</td>
+                        <td>Автомонтирование экспортированной директории NFS.</td>
                         <td>admin-cod</td>
                     </tr>
                 </tbody>
             </table>
         </section>
 
-        <!-- Секция Этап 8 -->
-        <section id="stage8">
-            <h2>Этап 8: Active Directory</h2>
+        <!-- Секция 11: Active Directory -->
+        <section id="stage11">
+            <h2>Этап 11: Active Directory</h2>
             <p>Настройка Samba AD.</p>
             <table>
                 <thead>
@@ -690,56 +678,38 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Установить Samba AD</td>
-                        <td><code>sudo apt install samba samba-common-bin</code></td>
-                        <td>Устанавливаем Samba.</td>
+                        <td>11.1.a.b.c.i Установить Samba AD, выполнить provision</td>
+                        <td><code>sudo apt install samba samba-common-bin smbclient winbind</code>; <code>sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.backup</code>; <code>sudo samba-tool domain provision --realm=office.ssa2026.region --domain=OFFICE --adminpass=P@ssw0rd --server-role=dc --dns-backend=BIND9_DLZ</code>; <code>sudo systemctl stop smbd nmbd</code>; <code>sudo systemctl disable smbd nmbd</code>; <code>sudo systemctl enable samba-ad-dc</code>; <code>sudo systemctl start samba-ad-dc</code>.</td>
+                        <td>Устанавливаем Samba, резервируем старый конфиг, создаем домен OFFICE с realm office.ssa2026.region, используем P@ssw0rd как пароль администратора, роль DC, DNS backend BIND9_DLZ. Останавливаем старые службы, запускаем новую.</td>
                         <td>dc-a</td>
                     </tr>
                     <tr>
-                        <td>Произвести подготовку для Samba AD</td>
-                        <td><code>sudo samba-tool domain provision --realm=office.ssa2026.region...</code></td>
-                        <td>Создаем домен.</td>
-                        <td>dc-a</td>
+                        <td>11.2 Установить ADMC</td>
+                        <td>Скачать и установить ADMC (например, через flatpak/snap/apt).</td>
+                        <td>Инструмент для управления AD.</td>
+                        <td>cli1-a</td>
                     </tr>
                     <tr>
-                        <td>Запустить и включить Samba AD</td>
-                        <td><code>sudo systemctl disable smbd nmbd</code>, <code>sudo systemctl enable samba-ad-dc</code> и т.д.</td>
-                        <td>Останавливаем старые службы, включаем новую.</td>
-                        <td>dc-a</td>
-                    </tr>
-                    <tr>
-                        <td>Создать подразделения (OU)</td>
-                        <td><code>samba-tool ou create "OU=ofadmins,DC=office,DC=ssa2026,DC=region"</code> и т.д.</td>
-                        <td>Создаем Organizational Units.</td>
+                        <td>11.3.a.b.i.ii Создать OU, группы, пользователей</td>
+                        <td>Через <code>samba-tool</code> или <code>admc</code>: <code>samba-tool ou create "OU=ofadmins,DC=office,DC=ssa2026,DC=region"</code>; <code>samba-tool ou create "OU=ofusers,DC=office,DC=ssa2026,DC=region"</code>; <code>samba-tool group add ofadmins --description="Office Admins"</code>; <code>samba-tool group add ofusers --description="Office Users"</code>; <code>samba-tool user create ofadmin1 P@ssw0rd --given-name=OfAdmin --surname=Ivanov</code>; <code>samba-tool user create ofuser1 P@ssw0rd --given-name=OfUser --surname=Petrov</code>; <code>samba-tool user create user1 P@ssw0rd --given-name=User --surname=Sidorov</code>.</td>
+                        <td>Создаем подразделения, группы и пользователей.</td>
                         <td>dc-a (или через admc)</td>
                     </tr>
                     <tr>
-                        <td>Создать группы</td>
-                        <td><code>samba-tool group add ofadmins --description="Office Admins"</code> и т.д.</td>
-                        <td>Создаем группы.</td>
+                        <td>11.3.b.i.ii.iii Добавить пользователей в OU и группы</td>
+                        <td>Через <code>samba-tool</code> или <code>admc</code>: <code>samba-tool user move "cn=ofadmin1,cn=Users,DC=office,DC=ssa2026,DC=region" "OU=ofadmins,DC=office,DC=ssa2026,DC=region"</code>; <code>samba-tool group addmembers ofadmins ofadmin1</code>; <code>samba-tool user move "cn=ofuser1,cn=Users,DC=office,DC=ssa2026,DC=region" "OU=ofusers,DC=office,DC=ssa2026,DC=region"</code>; <code>samba-tool group addmembers ofusers ofuser1</code>; <code>samba-tool user move "cn=user1,cn=Users,DC=office,DC=ssa2026,DC=region" "OU=ofusers,DC=office,DC=ssa2026,DC=region"</code> (не добавлять в группы).</td>
+                        <td>Помещаем пользователей в OU и добавляем в соответствующие группы (user1 - только в OU).</td>
                         <td>dc-a (или через admc)</td>
                     </tr>
                     <tr>
-                        <td>Создать пользователей</td>
-                        <td><code>samba-tool user create ofadmin1 P@ssw0rd --given-name=OfAdmin...</code> и т.д.</td>
-                        <td>Создаем пользователей.</td>
-                        <td>dc-a (или через admc)</td>
-                    </tr>
-                    <tr>
-                        <td>Добавить пользователей в OU и группы</td>
-                        <td><code>samba-tool user move...</code>, <code>samba-tool group addmembers...</code></td>
-                        <td>Помещаем пользователей в OU и добавляем в группы.</td>
-                        <td>dc-a (или через admc)</td>
-                    </tr>
-                    <tr>
-                        <td>Настроить политику GPO</td>
+                        <td>11.4 Настроить политику GPO</td>
                         <td>(Через admc на cli1-a)</td>
-                        <td>Требуется GUI-инструмент admc.</td>
+                        <td>Создать GPO, привязать к OU 'ofusers'. Настроить: запрет изменения сетевых настроек, запрет изменения параметров рабочего стола, установка фонового изображения.</td>
                         <td>cli1-a (через admc -> dc-a)</td>
                     </tr>
                     <tr>
-                        <td>Присоединить cli1-a и cli2-a к домену</td>
-                        <td><code>sudo realm join OFFICE.SSA2026.REGION -U administrator</code></td>
+                        <td>11.5 Ввести cli1-a и cli2-a в домен</td>
+                        <td><code>sudo realm join OFFICE.SSA2026.REGION -U administrator</code> (вводим P@ssw0rd). Установить <code>realmd</code>, <code>sssd</code>, <code>krb5-user</code>, <code>samba-common-bin</code> если нужно.</td>
                         <td>Присоединение к домену.</td>
                         <td>cli1-a, cli2-a</td>
                     </tr>
@@ -747,60 +717,18 @@
             </table>
         </section>
 
-        <!-- Секция Этап 9 -->
-        <section id="stage9">
-            <h2>Этап 9: Мониторинг</h2>
+        <!-- Секция 12: Мониторинг -->
+        <section id="stage12">
+            <h2>Этап 12: Мониторинг</h2>
             <p>Настройка Zabbix.</p>
             <p>(Секция будет заполнена аналогично предыдущим этапам, когда вы выполните настройку Zabbix)</p>
-            <!-- Пример строки таблицы -->
-            <!--
-            <table>
-                <thead>
-                    <tr>
-                        <th>Задача</th>
-                        <th>Команда / Действие</th>
-                        <td>Пояснение</td>
-                        <td>Где выполнять</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Установить Zabbix</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                    </tr>
-                </tbody>
-            </table>
-            -->
         </section>
 
-        <!-- Секция Этап 10 -->
-        <section id="stage10">
-            <h2>Этап 10: VoIP</h2>
+        <!-- Секция 13: VoIP -->
+        <section id="stage13">
+            <h2>Этап 13: VoIP</h2>
             <p>Настройка SNG7-PBX.</p>
             <p>(Секция будет заполнена аналогично предыдущим этапам, когда вы выполните настройку VoIP)</p>
-            <!-- Пример строки таблицы -->
-            <!--
-            <table>
-                <thead>
-                    <tr>
-                        <th>Задача</th>
-                        <th>Команда / Действие</th>
-                        <td>Пояснение</td>
-                        <td>Где выполнять</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Установить SNG7-PBX</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                    </tr>
-                </tbody>
-            </table>
-            -->
         </section>
 
     </main>
@@ -817,6 +745,7 @@
             <li><a href="https://help.ubuntu.ru/wiki/nfs" target="_blank">NFS Server Setup (RU)</a></li>
             <li><a href="https://jamielinux.com/docs/openssl-certificate-authority/" target="_blank">OpenSSL Certificate Authority</a></li>
             <li><a href="https://zabbix.com/documentation/current/manual/installation" target="_blank">Zabbix Installation Manual</a></li>
+            <li><a href="https://ecorouter.ru/documentation/" target="_blank">EcoRouterOS Documentation</a></li>
         </ul>
     </footer>
 
